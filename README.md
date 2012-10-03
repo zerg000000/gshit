@@ -1,0 +1,1 @@
+[![Build Status](https://secure.travis-ci.org/weavejester/hiccup.png)](http://travis-ci.org/weavejester/hiccup)

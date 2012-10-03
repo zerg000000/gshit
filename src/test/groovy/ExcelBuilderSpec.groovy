@@ -28,10 +28,10 @@ class ExcelBuilderSpec extends Specification {
         expect:
         new File("test.xls").exists()
 
-        //cleanup:
-        //new File("test.xls").delete()
+        cleanup:
+        new File("test.xls").delete()
     }
-    /**
+
     def "should allow looping sheets"() {
         setup:
         new ExcelBuilder()
@@ -44,7 +44,7 @@ class ExcelBuilderSpec extends Specification {
 
         cleanup:
         new File("test.xls").delete()
-    }*/
+    }
 
     def "create style and font in workbook"() {
         setup:
