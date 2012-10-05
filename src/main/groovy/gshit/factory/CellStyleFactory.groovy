@@ -1,11 +1,27 @@
 package gshit.factory
 
-/**
- * Created with IntelliJ IDEA.
- * User: admin
- * Date: 10/3/12
- * Time: 10:23 PM
- * To change this template use File | Settings | File Templates.
- */
-class CellStyleFactory {
+import gshit.ExcelBuilder
+import org.apache.poi.ss.usermodel.CellStyle
+
+class CellStyleFactory extends AbstractFactory {
+    ExcelBuilder builder
+
+    boolean leaf = true
+
+    boolean handlesNodeChildren = false
+
+    boolean processNodeChildren = true
+
+    @Override
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+        CellStyle s = builder.current.createCellStyle()
+        builder.styles[attributes['name']] = s
+        attributes.each { k, v ->
+            if(k in CellStyle.metaClass.properties*.name) {
+                if(k == 'font') {
+                  s.font = builder.fonts[v]
+                }
+            }
+        }
+    }
 }

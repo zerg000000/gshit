@@ -50,13 +50,22 @@ class ExcelBuilderSpec extends Specification {
         setup:
         new ExcelBuilder()
                 .workbook {
-            font {
-
+            font(name:'normal',bold:true,fontHeightInPoints:256)
+            style(name:'default',font:'normal')
+            sheet('abc') {
+                row {
+                    cell(['al','ac'])
+                }
             }
-            style {
 
-            }
-        }
+            css(sheet:'abc',row:0,col:0,style:'default')
+        }.write(new FileOutputStream("test.xls"))
+
+        expect:
+        new File("test.xls").exists()
+
+        //cleanup:
+        //new File("test.xls").delete()
     }
 
 }

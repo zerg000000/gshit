@@ -12,10 +12,11 @@ class FontFactory extends AbstractFactory {
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        if(!builder.context['font'][value])
-            builder.context['font'][value] = builder.context['workbook'].createFont()
-        Font f = builder.context['font'][value]
-        attributes.each { k, v -> if(k in Font.metaClass.properties*.name) f.'$k' = v}
-        f
+        Font f = builder.current.createFont()
+        builder.fonts[attributes['name']] = f
+        attributes.each { k, v ->
+            if(['fontName','color','bold','fontHeightInPoints'].contains(k))
+              {f."$k" = v}
+        }
     }
 }
