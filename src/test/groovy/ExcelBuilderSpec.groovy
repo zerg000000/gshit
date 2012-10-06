@@ -20,7 +20,7 @@ class ExcelBuilderSpec extends Specification {
                 .workbook {
             sheet("abc") {
                 row {
-                    cell(['as', 'as', '', 'as', ''])
+                    cell('as', 'as', '', 'as', '')
                 }
             }
         }.write(new FileOutputStream("test.xlsx"))
@@ -53,9 +53,9 @@ class ExcelBuilderSpec extends Specification {
             font(name:'normal',bold:true,fontHeightInPoints:25)
             style(name:'default',font:'normal')
             sheet('abc') {
-                row { cell(['al','ac']) }
+                row { cell('al','ac') }
 
-                row { cell(['al','ddddd','kdjfke']) }
+                row { cell('al','ddddd','kdjfke') }
             }
 
             css(sheet:'abc',row:0..1,col:[0..1,2],style:'default')
@@ -75,9 +75,9 @@ class ExcelBuilderSpec extends Specification {
             font(name:'normal',bold:true,fontHeightInPoints:256,underline:'double')
             style(name:'default',font:'normal')
             sheet('abc') {
-                row { cell(['al','ac']) }
+                row { cell('al','ac') }
                 marker('group1') {
-                    row { cell(['al','ddddd','kdjfke']) }
+                    row { cell('al','ddddd','kdjfke') }
                 }
             }
 
@@ -100,18 +100,18 @@ class ExcelBuilderSpec extends Specification {
                 row { cell(['generated Date', new Date()]) }
                 ['2012', '2011', '2010'].each { title ->
                     marker('group1') {
-                        row{ cell( [title] ) }
-                        row { cell(['Item', 'Total', 'Producing from']) }
+                        row{ cell( title ) }
+                        row { cell('Item', 'Total', 'Producing from') }
 
                         ['Peter Pan', 'Mary Kay', 'Bob Bill']
                         .each { subtitle ->
                             marker('group2') {
-                                row { cell( [subtitle] ) }
-                                row { cell( ['increased salary', 300 * subtitle.size(), 'abc'] ) }
+                                row { cell( subtitle ) }
+                                row { cell( 'increased salary', 300 * subtitle.size(), 'abc' ) }
                             }
                         }
 
-                        row{cell(['end title'])}
+                        row{cell('end title')}
                     }
                 }
             }
@@ -133,7 +133,7 @@ class ExcelBuilderSpec extends Specification {
         expect:
         new File("test.xlsx").exists()
 
-        cleanup:
-        new File("test.xlsx").delete()
+        //cleanup:
+        //new File("test.xlsx").delete()
     }
 }
