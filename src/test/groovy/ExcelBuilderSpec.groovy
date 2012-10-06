@@ -115,13 +115,16 @@ class ExcelBuilderSpec extends Specification {
                     }
                 }
             }
+            format('normal-date', 'yyyy-MMM-dd')
             font(name:'normal',bold:true,fontHeightInPoints:25,underline:'double')
             font(name:'title',bold:true,italic:true,fontHeightInPoints:32,underline:'single')
             font(name:'subtitle', bold: true, fontHeightInPoints: 28)
+            style(name: 'normal-date', font: 'normal', format: 'normal-date')
             style(name:'default',font:'normal')
             style(name:'title', font:'title')
             style(name: 'subtitle', font: 'subtitle')
 
+            css(sheet: 'Statement Report', row: 0,col: 1,style:'normal-date')
             css(marker:'group1',sheet:'Statement Report',row:0,col:0,style:'title')
             css(marker:'group1',sheet:'Statement Report',row:1,col:0..2,style:'default')
             css(marker:'group2',sheet:'Statement Report',row:0,col:0,style:'subtitle')
@@ -130,7 +133,7 @@ class ExcelBuilderSpec extends Specification {
         expect:
         new File("test.xlsx").exists()
 
-        //cleanup:
-        //new File("test.xlsx").delete()
+        cleanup:
+        new File("test.xlsx").delete()
     }
 }

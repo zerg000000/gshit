@@ -19,7 +19,8 @@ class CellStyleFactory extends AbstractFactory {
     @Override
     public void onFactoryRegistration(FactoryBuilderSupport builder, String registeredName, String group) {
         setters = [
-                font : Setters.msetter('font',builder.fonts)
+                font : Setters.msetter('font',builder.fonts),
+                format : Setters.msetter('dataFormat',builder.formats)
         ]
         super.onFactoryRegistration(builder, registeredName, group)
     }

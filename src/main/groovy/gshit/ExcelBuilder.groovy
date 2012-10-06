@@ -8,11 +8,15 @@ import gshit.factory.FontFactory
 import gshit.factory.CellStyleFactory
 import gshit.factory.CSSFactory
 import gshit.factory.MarkerFactory
+import org.apache.poi.ss.usermodel.Font
+import org.apache.poi.ss.usermodel.CellStyle
+import gshit.factory.DataFormatFactory
 
 class ExcelBuilder extends FactoryBuilderSupport {
 
-    private Map<String,Object> fonts = [:]
-    private Map<String,Object> styles = [:]
+    private Map<String,Font> fonts = [:]
+    private Map<String,CellStyle> styles = [:]
+    private Map<String,Integer> formats = [:]
     private Map<String,List<Integer>> markers = [:]
 
     ExcelBuilder() {
@@ -29,6 +33,7 @@ class ExcelBuilder extends FactoryBuilderSupport {
     public void registerStyling() {
         registerFactory('font', new FontFactory(builder: this))
         registerFactory('style', new CellStyleFactory(builder:  this))
+        registerFactory('format', new DataFormatFactory(builder: this))
         registerFactory('css', new CSSFactory(builder:  this))
         registerFactory('marker', new MarkerFactory(builder: this))
     }
