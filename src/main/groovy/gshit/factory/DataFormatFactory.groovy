@@ -1,7 +1,7 @@
 package gshit.factory
 
-import org.apache.poi.ss.usermodel.DataFormat
 import gshit.ExcelBuilder
+import org.apache.poi.ss.usermodel.DataFormat
 
 class DataFormatFactory extends AbstractFactory {
     ExcelBuilder builder
@@ -16,7 +16,7 @@ class DataFormatFactory extends AbstractFactory {
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        dataFormat = !(dataFormat)?builder.current.createDataFormat():dataFormat
+        dataFormat = !(dataFormat) ? builder.current.createDataFormat() : dataFormat
         builder.formats[value[0]] = dataFormat.getFormat(value[1] as String)
     }
 }

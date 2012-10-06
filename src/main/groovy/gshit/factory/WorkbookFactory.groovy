@@ -15,6 +15,6 @@ class WorkbookFactory extends AbstractFactory {
 
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        (value == 'xls')? new HSSFWorkbook() : new XSSFWorkbook()
+        (value == 'xls') ? new HSSFWorkbook() : new XSSFWorkbook()
     }
 }

@@ -9,11 +9,11 @@ class MarkerFactory extends AbstractFactory {
 
     boolean handlesNodeChildren = false
 
-    Map<String,List<Integer>> markers = [:]
+    Map<String, List<Integer>> markers = [:]
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        if(!markers[value])markers[value] = []
+        if (!markers[value]) markers[value] = []
         markers[value].add(builder.factories['row'].rowCount)
         return builder.current
     }

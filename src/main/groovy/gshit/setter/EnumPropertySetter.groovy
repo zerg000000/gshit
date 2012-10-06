@@ -1,7 +1,5 @@
 package gshit.setter
 
-import gshit.setter.PropertySetter
-
 class EnumPropertySetter implements PropertySetter {
 
     private String name
@@ -9,8 +7,8 @@ class EnumPropertySetter implements PropertySetter {
 
     @Override
     void set(Object obj, Object val) {
-        if(val != null) {
-            obj."$name" = type.valueOf(val.toUpperCase().replace('-','_')).getValue()
+        if (val != null) {
+            obj."$name" = type.valueOf(val.toUpperCase().replace('-', '_')).getValue()
         }
     }
 }

@@ -1,9 +1,9 @@
 package gshit.factory
 
 import gshit.ExcelBuilder
-import org.apache.poi.ss.usermodel.CellStyle
 import gshit.setter.PropertySetter
 import gshit.setter.Setters
+import org.apache.poi.ss.usermodel.CellStyle
 
 class CellStyleFactory extends AbstractFactory {
     ExcelBuilder builder
@@ -19,8 +19,8 @@ class CellStyleFactory extends AbstractFactory {
     @Override
     public void onFactoryRegistration(FactoryBuilderSupport builder, String registeredName, String group) {
         setters = [
-                font : Setters.msetter('font',builder.fonts),
-                format : Setters.msetter('dataFormat',builder.formats)
+                font: Setters.msetter('font', builder.fonts),
+                format: Setters.msetter('dataFormat', builder.formats)
         ]
         super.onFactoryRegistration(builder, registeredName, group)
     }
@@ -30,7 +30,7 @@ class CellStyleFactory extends AbstractFactory {
         CellStyle s = builder.current.createCellStyle()
         builder.styles[attributes['name']] = s
         attributes.each { k, v ->
-            setters[k]?.set(s,v)
+            setters[k]?.set(s, v)
         }
     }
 }
