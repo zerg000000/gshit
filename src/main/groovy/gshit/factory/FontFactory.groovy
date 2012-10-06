@@ -2,6 +2,10 @@ package gshit.factory
 
 import gshit.ExcelBuilder
 import org.apache.poi.ss.usermodel.Font
+import gshit.setter.Setters
+import org.apache.poi.ss.usermodel.FontUnderline
+import org.apache.poi.ss.usermodel.FontCharset
+import gshit.setter.PropertySetter
 
 class FontFactory extends AbstractFactory {
     ExcelBuilder builder
@@ -10,13 +14,28 @@ class FontFactory extends AbstractFactory {
 
     boolean handlesNodeChildren = false
 
+    Map<String, PropertySetter> setters = [
+            fontName : Setters.setter('fontName',String),
+            bold : Setters.setter('bold', Boolean),
+            fontHeight : Setters.setter('fontHeight', Integer),
+            fontHeightInPoints : Setters.setter('fontHeightInPoints', Integer),
+            italic : Setters.setter('italic', Boolean),
+            strikeout : Setters.setter('strikeout', Boolean),
+            boldweight : Setters.msetter('boldweight',
+                    ['normal' : Font.BOLDWEIGHT_NORMAL,
+                     'bold' : Font.BOLDWEIGHT_BOLD]),
+            underline : Setters.enumsetter('underline', FontUnderline.NONE),
+            typeOffset : Setters.msetter('typeOffset',
+                    ['none' : Font.SS_NONE,
+                     'super' : Font.SS_SUPER,
+                     'sub' : Font.SS_SUB]),
+            charset : Setters.enumsetter('charset', FontCharset.ANSI)
+    ]
+
     @Override
-    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         Font f = builder.current.createFont()
         builder.fonts[attributes['name']] = f
-        attributes.each { k, v ->
-            if(['fontName','color','bold','fontHeightInPoints'].contains(k))
-              {f."$k" = v}
-        }
+        attributes.each { k, v -> setters[k]?.set(f,v) }
     }
 }

@@ -13,6 +13,9 @@ class RowFactory extends AbstractFactory {
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        return builder.current.createRow( (value instanceof Integer)? value : rowCount++)
+        rowCount = (value)?((Integer)value):rowCount
+        def row = builder.current.createRow(rowCount)
+        rowCount = rowCount + 1
+        row
     }
 }

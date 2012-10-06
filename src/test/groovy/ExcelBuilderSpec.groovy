@@ -50,15 +50,38 @@ class ExcelBuilderSpec extends Specification {
         setup:
         new ExcelBuilder()
                 .workbook {
-            font(name:'normal',bold:true,fontHeightInPoints:256)
+            font(name:'normal',bold:true,fontHeightInPoints:25)
             style(name:'default',font:'normal')
             sheet('abc') {
-                row {
-                    cell(['al','ac'])
-                }
+                row { cell(['al','ac']) }
+
+                row { cell(['al','ddddd','kdjfke']) }
             }
 
-            css(sheet:'abc',row:0,col:0,style:'default')
+            css(sheet:'abc',row:0..1,col:[0..1,2],style:'default')
+        }.write(new FileOutputStream("test.xls"))
+
+        expect:
+        new File("test.xls").exists()
+
+        cleanup:
+        new File("test.xls").delete()
+    }
+
+    def "should position using marker"() {
+        setup:
+        new ExcelBuilder()
+                .workbook {
+            font(name:'normal',bold:true,fontHeightInPoints:256,underline:'double')
+            style(name:'default',font:'normal')
+            sheet('abc') {
+                row { cell(['al','ac']) }
+                //marker("group1") {
+                    row { cell(['al','ddddd','kdjfke']) }
+                //}
+            }
+
+            css(maker:'group1',sheet:'abc',row:0,col:[0,1,2],style:'default')
         }.write(new FileOutputStream("test.xls"))
 
         expect:
@@ -67,5 +90,4 @@ class ExcelBuilderSpec extends Specification {
         //cleanup:
         //new File("test.xls").delete()
     }
-
 }
