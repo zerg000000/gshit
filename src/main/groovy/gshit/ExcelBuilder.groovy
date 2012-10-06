@@ -7,11 +7,13 @@ import gshit.factory.RowFactory
 import gshit.factory.FontFactory
 import gshit.factory.CellStyleFactory
 import gshit.factory.CSSFactory
+import gshit.factory.MarkerFactory
 
 class ExcelBuilder extends FactoryBuilderSupport {
 
     private Map<String,Object> fonts = [:]
     private Map<String,Object> styles = [:]
+    private Map<String,List<Integer>> markers = [:]
 
     ExcelBuilder() {
         autoRegisterNodes()
@@ -28,5 +30,6 @@ class ExcelBuilder extends FactoryBuilderSupport {
         registerFactory('font', new FontFactory(builder: this))
         registerFactory('style', new CellStyleFactory(builder:  this))
         registerFactory('css', new CSSFactory(builder:  this))
+        registerFactory('marker', new MarkerFactory(builder: this))
     }
 }

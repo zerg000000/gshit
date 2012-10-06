@@ -18,4 +18,8 @@ class RowFactory extends AbstractFactory {
         rowCount = rowCount + 1
         row
     }
+
+    public void resetRowCount() {
+        rowCount = 0
+    }
 }

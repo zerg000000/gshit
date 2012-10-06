@@ -5,13 +5,13 @@ class ExcelBuilderSpec extends Specification {
 
     def "builder create an empty workbook"() {
         setup:
-        new ExcelBuilder().workbook {}.write(new FileOutputStream("test.xls"))
+        new ExcelBuilder().workbook {}.write(new FileOutputStream("test.xlsx"))
 
         expect:
-        new File("test.xls").exists()
+        new File("test.xlsx").exists()
 
         cleanup:
-        new File("test.xls").delete()
+        new File("test.xlsx").delete()
     }
 
     def "builder create a simple workbook"() {
@@ -23,13 +23,13 @@ class ExcelBuilderSpec extends Specification {
                     cell(['as', 'as', '', 'as', ''])
                 }
             }
-        }.write(new FileOutputStream("test.xls"))
+        }.write(new FileOutputStream("test.xlsx"))
 
         expect:
-        new File("test.xls").exists()
+        new File("test.xlsx").exists()
 
         cleanup:
-        new File("test.xls").delete()
+        new File("test.xlsx").delete()
     }
 
     def "should allow looping sheets"() {
@@ -37,13 +37,13 @@ class ExcelBuilderSpec extends Specification {
         new ExcelBuilder()
                 .workbook {
             ["abc", "efd", "efg"].each { t -> sheet(t) {} }
-        }.write(new FileOutputStream("test.xls"))
+        }.write(new FileOutputStream("test.xlsx"))
 
         expect:
-        new File("test.xls").exists()
+        new File("test.xlsx").exists()
 
         cleanup:
-        new File("test.xls").delete()
+        new File("test.xlsx").delete()
     }
 
     def "create style and font in workbook"() {
@@ -59,13 +59,13 @@ class ExcelBuilderSpec extends Specification {
             }
 
             css(sheet:'abc',row:0..1,col:[0..1,2],style:'default')
-        }.write(new FileOutputStream("test.xls"))
+        }.write(new FileOutputStream("test.xlsx"))
 
         expect:
-        new File("test.xls").exists()
+        new File("test.xlsx").exists()
 
         cleanup:
-        new File("test.xls").delete()
+        new File("test.xlsx").delete()
     }
 
     def "should position using marker"() {
@@ -76,18 +76,61 @@ class ExcelBuilderSpec extends Specification {
             style(name:'default',font:'normal')
             sheet('abc') {
                 row { cell(['al','ac']) }
-                //marker("group1") {
+                marker('group1') {
                     row { cell(['al','ddddd','kdjfke']) }
-                //}
+                }
             }
 
-            css(maker:'group1',sheet:'abc',row:0,col:[0,1,2],style:'default')
-        }.write(new FileOutputStream("test.xls"))
+            css(marker:'group1',sheet:'abc',row:0,col:[0,1,2],style:'default')
+        }.write(new FileOutputStream("test.xlsx"))
 
         expect:
-        new File("test.xls").exists()
+        new File("test.xlsx").exists()
+
+        cleanup:
+        new File("test.xlsx").delete()
+    }
+
+    def "marker should work in nested loop"() {
+        setup:
+        new ExcelBuilder()
+                .workbook {
+
+            sheet('Statement Report') {
+                row { cell(['generated Date', new Date()]) }
+                ['2012', '2011', '2010'].each { title ->
+                    marker('group1') {
+                        row{ cell( [title] ) }
+                        row { cell(['Item', 'Total', 'Producing from']) }
+
+                        ['Peter Pan', 'Mary Kay', 'Bob Bill']
+                        .each { subtitle ->
+                            marker('group2') {
+                                row { cell( [subtitle] ) }
+                                row { cell( ['increased salary', 300 * subtitle.size(), 'abc'] ) }
+                            }
+                        }
+
+                        row{cell(['end title'])}
+                    }
+                }
+            }
+            font(name:'normal',bold:true,fontHeightInPoints:25,underline:'double')
+            font(name:'title',bold:true,italic:true,fontHeightInPoints:32,underline:'single')
+            font(name:'subtitle', bold: true, fontHeightInPoints: 28)
+            style(name:'default',font:'normal')
+            style(name:'title', font:'title')
+            style(name: 'subtitle', font: 'subtitle')
+
+            css(marker:'group1',sheet:'Statement Report',row:0,col:0,style:'title')
+            css(marker:'group1',sheet:'Statement Report',row:1,col:0..2,style:'default')
+            css(marker:'group2',sheet:'Statement Report',row:0,col:0,style:'subtitle')
+        }.write(new FileOutputStream("test.xlsx"))
+
+        expect:
+        new File("test.xlsx").exists()
 
         //cleanup:
-        //new File("test.xls").delete()
+        //new File("test.xlsx").delete()
     }
 }

@@ -4,8 +4,6 @@ import gshit.ExcelBuilder
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
-
-
 class WorkbookFactory extends AbstractFactory {
     ExcelBuilder builder
 
@@ -17,7 +15,6 @@ class WorkbookFactory extends AbstractFactory {
 
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        def wb = (value == 'xls')? new HSSFWorkbook() : new XSSFWorkbook()
-        return wb
+        (value == 'xls')? new HSSFWorkbook() : new XSSFWorkbook()
     }
 }

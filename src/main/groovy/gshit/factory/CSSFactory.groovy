@@ -12,12 +12,12 @@ class CSSFactory extends AbstractFactory {
 
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        select(attributes['sheet'],attributes['row'],attributes['col'])
+        select(attributes['sheet'],attributes['row'],attributes['col'],attributes['marker'])
                 {cell -> cell?.setCellStyle(builder.styles[attributes['style']])}
         null
     }
 
-    public void select(Object sheet, Object row, Object col, Closure closure) {
+    public void select(Object sheet, Object row, Object col, Object marker, Closure closure) {
         def sheets = []
         if(FactoryBuilderSupport.checkValueIsType(sheet,'sheet',String)) {
             sheets.add(sheet)
@@ -27,13 +27,18 @@ class CSSFactory extends AbstractFactory {
 
         def rows = getNumList(row)
         def cols = getNumList(col)
+        def markers = (marker)?builder.factories['marker'].markers[marker]:[0]
 
         sheets.each { sht ->
-            rows.each {
-                rowNo ->
-                cols.each {
-                    colNo ->
-                    closure.call(builder.current?.getSheet(sht)?.getRow(rowNo)?.getCell(colNo))
+            markers.each {
+                markerNo ->
+
+                rows.each {
+                    rowNo ->
+                    cols.each {
+                        colNo ->
+                        closure.call(builder.current?.getSheet(sht)?.getRow(markerNo + rowNo)?.getCell(colNo))
+                    }
                 }
             }
         }
