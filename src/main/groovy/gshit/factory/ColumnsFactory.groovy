@@ -23,7 +23,7 @@ class ColumnsFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         FactoryBuilderSupport.checkValueIsType(value, name, List)
         Sheet sht = builder.current as Sheet
-        setColumn = {
+        adjustColumn = {
             value.eachWithIndex { e, i ->
                 if (e instanceof Number) {
                     sht.setColumnWidth(i, e.intValue())
