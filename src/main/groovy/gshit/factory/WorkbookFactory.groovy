@@ -17,4 +17,9 @@ class WorkbookFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         (value == 'xls') ? new HSSFWorkbook() : new XSSFWorkbook()
     }
+
+    @Override
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+        builder.factories['columns'].adjustColumn()
+    }
 }

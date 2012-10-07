@@ -1,5 +1,8 @@
 apply plugin: 'groovy'
 
+group = 'gshit'
+version = '0.0.1'
+
 repositories {
     mavenCentral()
 }

@@ -11,9 +11,9 @@ import org.apache.poi.ss.usermodel.VerticalAlignment
 class CellStyleFactory extends AbstractFactory {
     ExcelBuilder builder
 
-    boolean leaf = true
+    boolean leaf = false
 
-    boolean handlesNodeChildren = false
+    boolean handlesNodeChildren = true
 
     boolean processNodeChildren = true
 

@@ -21,11 +21,6 @@ class CSSFactory extends AbstractFactory {
         'css'
     }
 
-    @Override
-    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        builder.factories['columns'].adjustColumn()
-    }
-
     public void select(Object sheet, Object row, Object col, Object marker, Closure closure) {
         def sheets = []
         if (FactoryBuilderSupport.checkValueIsType(sheet, 'sheet', String)) {
