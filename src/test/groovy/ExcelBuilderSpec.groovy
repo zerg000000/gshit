@@ -138,4 +138,35 @@ class ExcelBuilderSpec extends Specification {
         //cleanup:
         //new File("test.xlsx").delete()
     }
+
+    def "should allow script"() {
+        setup:
+        String text = '''
+        workbook {
+            font(name: 'normal', bold: true, fontHeightInPoints: 25)
+            style(name: 'default', font: 'normal')
+            sheet('abc') {
+               dumbs.each { d ->
+                row { cell(d) }
+               }
+            }
+
+            css(sheet: 'abc', row: 0..1, col: [0..1, 2], style: 'default')
+        }
+        '''
+        GroovyCodeSource c = new GroovyCodeSource(text,'test.script','test.script')
+        Class compiledScript =  new GroovyClassLoader(Thread.currentThread().getContextClassLoader()).parseClass(c)
+
+        def excel = new ExcelBuilder()
+        excel
+        .setVariable('dumbs',['abc','efg','rgt','wer'])
+        .build(compiledScript)
+        .write(new FileOutputStream("test.xlsx"))
+
+        expect:
+        new File("test.xlsx").exists()
+
+        cleanup:
+        new File("test.xlsx").delete()
+    }
 }
