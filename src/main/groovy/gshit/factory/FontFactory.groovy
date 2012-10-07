@@ -33,9 +33,14 @@ class FontFactory extends AbstractFactory {
     ]
 
     @Override
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+        attributes.each { k, v -> setters[k]?.set(node, v) }
+        false
+    }
+
+    @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         Font f = builder.current.createFont()
         builder.fonts[attributes['name']] = f
-        attributes.each { k, v -> setters[k]?.set(f, v) }
     }
 }

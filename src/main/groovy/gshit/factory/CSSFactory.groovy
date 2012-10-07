@@ -10,10 +10,20 @@ class CSSFactory extends AbstractFactory {
     boolean handlesNodeChildren = false
 
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
         select(attributes['sheet'], attributes['row'], attributes['col'], attributes['marker'])
                 {cell -> cell?.setCellStyle(builder.styles[attributes['style']])}
-        null
+        false
+    }
+
+    @Override
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+        'css'
+    }
+
+    @Override
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+        builder.factories['columns'].adjustColumn()
     }
 
     public void select(Object sheet, Object row, Object col, Object marker, Closure closure) {

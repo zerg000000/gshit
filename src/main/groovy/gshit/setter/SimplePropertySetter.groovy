@@ -6,7 +6,7 @@ class SimplePropertySetter implements PropertySetter {
 
     public void set(Object obj, Object value) {
         if (value == null || classType.isInstance(value)) {
-            obj."$name" = value
+            obj[name] = value
         }
     }
 }

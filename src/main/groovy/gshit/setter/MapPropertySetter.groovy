@@ -7,7 +7,7 @@ class MapPropertySetter implements PropertySetter {
     @Override
     void set(Object obj, Object val) {
         if (vals.containsKey(val)) {
-            obj."$name" = vals[val]
+            obj[name] = vals[val]
         }
     }
 }

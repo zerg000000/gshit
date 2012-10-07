@@ -1,6 +1,8 @@
 package gshit.factory
 
 import gshit.ExcelBuilder
+import gshit.setter.PropertySetter
+import gshit.setter.Setters
 
 class RowFactory extends AbstractFactory {
     ExcelBuilder builder
@@ -8,6 +10,24 @@ class RowFactory extends AbstractFactory {
     boolean leaf = false
 
     boolean handlesNodeChildren = false
+
+    Map<String, PropertySetter> setters = [:]
+
+    @Override
+    void onFactoryRegistration(FactoryBuilderSupport builder, String registeredName, String group) {
+        setters = [
+                'height': Setters.setter('height', Integer),
+                'heightInPoints': Setters.setter('heightInPoints', Double),
+                'zeroHeight': Setters.setter('zeroHeight', Boolean)
+        ]
+        super.onFactoryRegistration(builder, registeredName, group)    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
+        attributes.each { k, v -> setters[k]?.set(node, v) }
+        false
+    }
 
     int rowCount = 0
 

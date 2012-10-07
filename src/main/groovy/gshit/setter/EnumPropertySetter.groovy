@@ -8,7 +8,7 @@ class EnumPropertySetter implements PropertySetter {
     @Override
     void set(Object obj, Object val) {
         if (val != null) {
-            obj."$name" = type.valueOf(val.toUpperCase().replace('-', '_')).getValue()
+            obj[name] = type.valueOf(val.toUpperCase().replace('-', '_')).getValue()
         }
     }
 }

@@ -29,4 +29,8 @@ class ExcelBuilder extends FactoryBuilderSupport {
         registerFactory('css', new CSSFactory(builder: this))
         registerFactory('marker', new MarkerFactory(builder: this))
     }
+
+    public void registerSizing() {
+        registerFactory('columns', new ColumnsFactory(builder: this))
+    }
 }
