@@ -3,6 +3,7 @@ package gshit
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Font
 import gshit.factory.*
+import gshit.setter.ExcelCSSBuilder
 
 class ExcelBuilder extends FactoryBuilderSupport {
 
@@ -35,11 +36,5 @@ class ExcelBuilder extends FactoryBuilderSupport {
 
     public void registerSizing() {
         registerFactory('columns', new ColumnsFactory(builder: this))
-    }
-
-    @Override
-    ExcelBuilder setVariable(String name, Object value) {
-        super.setVariable(name, value)
-        this
     }
 }
