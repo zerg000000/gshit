@@ -22,10 +22,13 @@ class ExcelBuilder extends FactoryBuilderSupport {
         registerFactory('cell', new CellFactory(builder: this))
     }
 
-    public void registerStyling() {
+    public void registerStylingComponent() {
         registerFactory('font', new FontFactory(builder: this))
         registerFactory('style', new CellStyleFactory(builder: this))
         registerFactory('format', new DataFormatFactory(builder: this))
+    }
+
+    public void registerStylingCommand() {
         registerFactory('css', new CSSFactory(builder: this))
         registerFactory('marker', new MarkerFactory(builder: this))
     }

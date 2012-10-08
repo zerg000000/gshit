@@ -51,15 +51,17 @@ class ExcelBuilderSpec extends Specification {
         setup:
         new ExcelBuilder()
                 .workbook {
-            font(name: 'normal', bold: true, fontHeightInPoints: 25)
-            style(name: 'default', font: 'normal')
+            font(id: 'normal', bold: true, fontHeightInPoints: 25)
+            style(id: 'default', font: 'normal')
             sheet('abc') {
                 row { cell('al', 'ac') }
 
                 row { cell('al', 'ddddd', 'kdjfke') }
             }
 
-            css(sheet: 'abc', row: 0..1, col: [0..1, 2], style: 'default')
+            css{
+                cell(sheet: 'abc', row: 0..1, col: [0..1, 2], style: 'default')
+            }
         }.write(new FileOutputStream("test.xlsx"))
 
         expect:
@@ -73,8 +75,8 @@ class ExcelBuilderSpec extends Specification {
         setup:
         new ExcelBuilder()
                 .workbook {
-            font(name: 'normal', bold: true, fontHeightInPoints: 256, underline: 'double')
-            style(name: 'default', font: 'normal')
+            font(id: 'normal', bold: true, fontHeightInPoints: 256, underline: 'double')
+            style(id: 'default', font: 'normal')
             sheet('abc') {
                 row { cell('al', 'ac') }
                 marker('group1') {
@@ -82,7 +84,9 @@ class ExcelBuilderSpec extends Specification {
                 }
             }
 
-            css(marker: 'group1', sheet: 'abc', row: 0, col: [0, 1, 2], style: 'default')
+            css{
+                cell(marker: 'group1', sheet: 'abc', row: 0, col: [0, 1, 2], style: 'default')
+            }
         }.write(new FileOutputStream("test.xlsx"))
 
         expect:
@@ -118,24 +122,68 @@ class ExcelBuilderSpec extends Specification {
                 }
             }
             format('normal-date', 'yyyy-MMM-dd')
-            font(name: 'normal', bold: true, fontHeightInPoints: 25, underline: 'double')
-            font(name: 'title', bold: true, italic: true, fontHeightInPoints: 32, underline: 'single')
-            font(name: 'subtitle', bold: true, fontHeightInPoints: 28)
-            style(name: 'normal-date', font: 'normal', format: 'normal-date')
-            style(name: 'default', font: 'normal')
-            style(name: 'title', font: 'title')
-            style(name: 'subtitle', font: 'subtitle')
+            font(id: 'normal', bold: true, fontHeightInPoints: 25, underline: 'double')
+            font(id: 'title', bold: true, italic: true, fontHeightInPoints: 32, underline: 'single')
+            font(id: 'subtitle', bold: true, fontHeightInPoints: 28)
+            style(id: 'normal-date', font: 'normal', format: 'normal-date')
+            style(id: 'default', font: 'normal')
+            style(id: 'title', font: 'title')
+            style(id: 'subtitle', font: 'subtitle')
 
-            css(sheet: 'Statement Report', row: 0, col: 1, style: 'normal-date')
-            css(marker: 'group1', sheet: 'Statement Report', row: 0, col: 0, style: 'title')
-            css(marker: 'group1', sheet: 'Statement Report', row: 1, col: 0..2, style: 'default')
-            css(marker: 'group2', sheet: 'Statement Report', row: 0, col: 0, style: 'subtitle')
+            css {
+                sheet('Statement Report'){
+                  cell(style: 'normal-date', row: 0, col: 1)
+                  marker('group1') {
+                      cell(style: 'title', row: 0, col: 0)
+                      cell(style: 'default', row: 1, col: 0..2)
+                  }
+                  marker('group2') {
+                      cell(style: 'subtitle', row: 0, col: 0)
+                  }
+                }
+            }
         }.write(new FileOutputStream("test.xlsx"))
 
         expect:
         new File("test.xlsx").exists()
 
-        //cleanup:
-        //new File("test.xlsx").delete()
+        cleanup:
+        new File("test.xlsx").delete()
     }
+
+    def "should allow script"() {
+        setup:
+        String text = '''
+        workbook {
+            font(id: 'normal', bold: true, fontHeightInPoints: 25)
+            style(id: 'default', font: 'normal')
+
+            sheet('abc') {
+               dumbs.each { d ->
+                row { cell(d) }
+               }
+            }
+
+            css{
+              cell(sheet: 'abc', row: 0..1, col: [0..1, 2], style: 'default')
+            }
+        }
+        '''
+        GroovyCodeSource c = new GroovyCodeSource(text,'test.script','test.script')
+        Class compiledScript =  new GroovyClassLoader(Thread.currentThread().getContextClassLoader()).parseClass(c)
+
+        def excel = new ExcelBuilder()
+        excel.setVariable('dumbs',['abc','efg','rgt','wer'])
+        excel
+        .build(compiledScript)
+        .write(new FileOutputStream("test.xlsx"))
+
+        expect:
+        new File("test.xlsx").exists()
+
+        cleanup:
+        new File("test.xlsx").delete()
+    }
+
+
 }

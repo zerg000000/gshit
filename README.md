@@ -15,6 +15,63 @@ Building a standard excel report is a piece of cake!
 
     new ExcelBuilder()
     .workbook {
+      sheet('cool') {
+        row { cell('This', 'is', 'easy', '.') }
+      }
+    }.write('~/cake.xlsx')
+
+That's damn easy to create a complex report.
+Especially, you can use any groovy magic in the script.
+
+    new ExcelBuilder()
+    .workbook {
+      sheet('long sheet') {
+        columns('auto', 5 * 256, 'auto', 'auto', 'auto') // this is the column widths
+
+        1..100.each { i ->
+          row { cell('No.', i, 'student', 'from day', new Date()) }
+        }
+      }
+    }.write('~/loop.xlsx')
+
+defining style elements is much more simplified.
+
+    format( 'date', 'yyyy-MMM-dd' )
+    format( 'money', '#,##0.00' )
+
+    font( id: 'header', bold: true, fontHeight: 24, underline: 'single')
+    font( id: 'normal', fontHeight: 12)
+
+    style( id: 'header', font: 'header' )
+    style( id: 'normal', font: 'normal' )
+    style( id: 'normal-date', font: 'normal', format: 'date')
+    style( id: 'normal-money', font: 'normal', format: 'money', alignment: 'right')
+
+styling using extermely flexible syntax
+
+    new ExcelBuilder('xls')
+    .workbook {
+      sheet('pretty shit') {
+         row {
+           cell('abc','abc','abc') // these cells will be styled with 'gg'
+         }
+      }
+
+      style(id: 'gg', alignment: 'right')
+
+      css {
+        cell(style: 'gg', row: 0, col: 0..2)
+      }
+    }.write('~/styled.xls')
+
+
+
+
+
+An complete example
+
+    new ExcelBuilder()
+    .workbook {
       sheet( 'Daily summary' ) {
         columns( 7 * 256, 52 * 256, 'auto', 'auto', 'auto' )
         row { cell( 'Printed', new Date() ) }
@@ -29,18 +86,25 @@ Building a standard excel report is a piece of cake!
       format( 'date', 'yyyy-MMM-dd' )
       format( 'money', '#,##0.00' )
 
-      font( name: 'header', bold: true, fontHeight: 24, underline: 'single' )
-      font( name: 'normal', fontHeight: 12)
+      font( id: 'header', bold: true, fontHeight: 24, underline: 'single' )
+      font( id: 'normal', fontHeight: 12)
 
-      style( name: 'header', font: 'header' )
-      style( name: 'normal', font: 'normal' )
-      style( name: 'normal-date', font: 'normal', format: 'date')
-      style( name: 'normal-money', font: 'normal', format: 'money', alignment: 'right')
+      style( id: 'header', font: 'header' )
+      style( id: 'normal', font: 'normal' )
+      style( id: 'normal-date', font: 'normal', format: 'date')
+      style( id: 'normal-money', font: 'normal', format: 'money', alignment: 'right')
 
-      css( sheet: 'Daily summary', row: 0, col: 1, style: 'normal-date' )
-      css( sheet: 'Daily summary', row: 1, col: 0..5, style: 'header' )
-      css( marker: 'transaction', sheet: 'Daily summary', row: 0, col: 0..4, style: 'normal' )
-      css( marker: 'transaction', sheet: 'Daily summary', row: 0, col: 1, style: 'normal-date' )
-      css( marker: 'transaction', sheet: 'Daily summary', row: 0, col: 4, style: 'normal-money' )
-
+      css{
+        style('normal') {
+          sheet('Daily summary') {
+            cell(style: 'normal-date', row: 0, col: 1 )
+            marker('transaction') {
+              cell(row: 0, col: 0..4 )
+              cell(style: 'header', row: 1, col: 0..5)
+              cell(style: 'normal-money', row: 0, col: 4 )
+              cell(style: 'normal-date', row: 0, col: 1 )
+            }
+          }
+        }
+      }
     }.write(new FileOutputStream('~/daily.summary.xlsx'))
