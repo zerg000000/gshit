@@ -1,7 +1,7 @@
 package gshit.factory
 
 import gshit.ExcelBuilder
-import gshit.setter.ExcelCSSBuilder
+import gshit.ExcelCSSBuilder
 
 class CSSFactory extends AbstractFactory {
     ExcelBuilder builder

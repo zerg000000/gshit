@@ -1,5 +1,5 @@
 import spock.lang.*
-import gshit.setter.ExcelCSSBuilder
+import gshit.ExcelCSSBuilder
 
 class ExcelCSSBuilderSpec extends Specification {
     def 'simple nested'() {

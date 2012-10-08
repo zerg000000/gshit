@@ -3,7 +3,6 @@ package gshit
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Font
 import gshit.factory.*
-import gshit.setter.ExcelCSSBuilder
 
 class ExcelBuilder extends FactoryBuilderSupport {
 

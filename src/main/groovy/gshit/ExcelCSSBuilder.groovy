@@ -1,4 +1,4 @@
-package gshit.setter
+package gshit
 
 class ExcelCSSBuilder extends FactoryBuilderSupport {
 

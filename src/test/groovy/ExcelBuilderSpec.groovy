@@ -184,4 +184,6 @@ class ExcelBuilderSpec extends Specification {
         cleanup:
         new File("test.xlsx").delete()
     }
+
+
 }
