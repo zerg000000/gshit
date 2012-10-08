@@ -50,7 +50,7 @@ class CellStyleFactory extends AbstractFactory {
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         CellStyle s = builder.current.createCellStyle()
-        builder.styles[attributes['name']] = s
+        builder.styles[attributes['id']] = s
 
     }
 }

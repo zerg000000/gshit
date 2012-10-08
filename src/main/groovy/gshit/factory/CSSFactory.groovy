@@ -1,37 +1,51 @@
 package gshit.factory
 
 import gshit.ExcelBuilder
+import gshit.ExcelCSSBuilder
 
 class CSSFactory extends AbstractFactory {
     ExcelBuilder builder
 
-    boolean leaf = true
+    boolean leaf = false
 
-    boolean handlesNodeChildren = false
+    boolean handlesNodeChildren = true
+
+    boolean processNodeChildren = false
 
     @Override
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
-        select(attributes['sheet'], attributes['row'], attributes['col'], attributes['marker'])
-                {cell -> cell?.setCellStyle(builder.styles[attributes['style']])}
         false
     }
 
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        'css'
+        builder.current
+    }
+
+    @Override
+    boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
+        ExcelCSSBuilder cssBuilder = new ExcelCSSBuilder()
+
+        List<Map<String,Object>> selectors = builder.withBuilder(cssBuilder,{css(childContent)})
+        selectors.each { s ->
+            select(s['sheet'], s['row'], s['col'], s['marker'])
+                    {cell -> cell?.setCellStyle(builder.styles[s['style']])}
+        }
+
+        false
     }
 
     public void select(Object sheet, Object row, Object col, Object marker, Closure closure) {
-        def sheets = []
+        List<String> sheets = []
         if (FactoryBuilderSupport.checkValueIsType(sheet, 'sheet', String)) {
             sheets.add(sheet)
         } else {
             sheets.addAll(sheet)
         }
 
-        def rows = getNumList(row)
-        def cols = getNumList(col)
-        def markers = (marker) ? builder.factories['marker'].markers[marker] : [0]
+        List<Integer> rows = expandNumList(row)
+        List<Integer> cols = expandNumList(col)
+        List<Integer> markers = (marker) ? builder.factories['marker'].markers[marker] : [0]
 
         sheets.each { sht ->
             markers.each {
@@ -48,7 +62,7 @@ class CSSFactory extends AbstractFactory {
         }
     }
 
-    private List<Integer> getNumList(row) {
+    private List<Integer> expandNumList(row) {
         def rows = []
         if (row instanceof Integer) {
             rows.add(row)
@@ -56,7 +70,7 @@ class CSSFactory extends AbstractFactory {
             rows.addAll(row)
         } else if (row instanceof List) {
             row.each { r ->
-                rows.addAll(getNumList(r))
+                rows.addAll(expandNumList(r))
             }
         }
         rows
