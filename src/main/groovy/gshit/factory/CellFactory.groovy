@@ -1,6 +1,8 @@
 package gshit.factory
 
 import gshit.ExcelBuilder
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.usermodel.Cell
 
 class CellFactory extends AbstractFactory {
     ExcelBuilder builder
@@ -14,6 +16,13 @@ class CellFactory extends AbstractFactory {
         if (!(value instanceof List)) {
             value = [value]
         }
-        value.eachWithIndex { e, i -> builder.current.createCell(i).setCellValue(e)}
+        Row row = builder.current
+        value.eachWithIndex { e, i ->
+            Cell cell = row.createCell(i)
+            if(e instanceof String && e.startWith('=')) {
+                cell.setCellFormula(e)
+            }
+            cell.setCellValue(e)
+        }
     }
 }
