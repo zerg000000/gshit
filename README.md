@@ -18,7 +18,7 @@ new ExcelBuilder()
   sheet('cool') {
     row { cell('This', 'is', 'easy', '.') }
   }
-}.write('~/cake.xlsx')
+}.write(new FileOutputStream('~/cake.xlsx'))
 ```
 That's damn easy to create a complex report.
 Especially, you can use any groovy magic in the script.
@@ -32,7 +32,7 @@ new ExcelBuilder()
       row { cell('No.', i, 'student', 'from day', new Date()) }
     }
   }
-}.write('~/loop.xlsx')
+}.write(new FileOutputStream('~/loop.xlsx'))
 ```
 Defining style elements is much more simplified.
 ```groovy
@@ -62,7 +62,7 @@ new ExcelBuilder('xls')
   css {
     cell(style: 'gg', row: 0, col: 0..2)
   }
-}.write('~/styled.xls')
+}.write(new FileOutputStream('~/styled.xls'))
 ```
 
 An complete example
