@@ -19,7 +19,7 @@ class CellFactory extends AbstractFactory {
         Row row = builder.current
         value.eachWithIndex { e, i ->
             Cell cell = row.createCell(i)
-            if(e instanceof String && e.startWith('=')) {
+            if(e instanceof String && e.startsWith('=')) {
                 cell.setCellFormula(e)
             }
             cell.setCellValue(e)
